@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: sqlinstances.db.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: db.idp.upbound.io/v1alpha1
+    kind: SQLInstance
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: upbound-idp-dbcompose-sqlinstance
+    step: compose-sqlinstance
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

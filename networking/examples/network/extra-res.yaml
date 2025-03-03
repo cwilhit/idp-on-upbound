@@ -1,0 +1,42 @@
+apiVersion: networking.idp.upbound.io/v1alpha1
+kind: Subnet
+metadata:
+  name: example-az1
+status:
+  conditions:
+  - lastTransitionTime: "2024-01-01T00:00:00Z"
+    message: 'Unready resources: subnetwork'
+    reason: Creating
+    status: "False"
+    type: Ready
+---
+apiVersion: nop.crossplane.io/v1alpha1
+kind: NopResource
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: subnetwork
+  generateName: example-az1-
+  labels:
+    crossplane.io/composite: example-az1
+  name: example-az1-subnetwork
+  ownerReferences:
+  - apiVersion: networking.idp.upbound.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Subnet
+    name: example-az1
+    uid: ""
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    conditionAfter:
+    - conditionStatus: "True"
+      conditionType: Ready
+      time: 5s
+    fields:
+      availabilityZone: us-west-2a
+      cidrBlock: 192.168.0.0/18
+      region: us-west-2
+      type: public
+  managementPolicies:
+  - '*'

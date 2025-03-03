@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: networks.networking.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: networking.idp.upbound.io/v1alpha1
+    kind: Network
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: upbound-idp-networkingcompose-network
+    step: compose-network
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

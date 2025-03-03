@@ -1,0 +1,51 @@
+apiVersion: networking.idp.upbound.io/v1alpha1
+kind: NetworkClaim
+metadata:
+  name: example
+  namespace: default
+spec:
+  parameters:
+    region: us-west-2
+    vpcCidrBlock: 192.168.0.0/16
+    subnets:
+      - subnetRef:
+          apiVersion: networking.idp.upbound.io
+          grants:
+          - "*"
+          kind: SubnetClaim
+          name: example-az1
+        parameters:
+          cidrBlock: 192.168.0.0/18
+          type: public
+          availabilityZone: us-west-2a
+#      - subnetRef:
+#          apiVersion: networking.idp.upbound.io
+#          grants:
+#          - "*"
+#          kind: Subnet
+#          name: az2
+#        parameters:
+#          cidrBlock: 192.168.64.0/18
+#          type: public
+#          availabilityZone: us-west-2b
+#      - subnetRef:
+#          apiVersion: networking.idp.upbound.io
+#          grants:
+#          - "*"
+#          kind: Subnet
+#          name: az3
+#        parameters:
+#          cidrBlock: 192.168.128.0/18
+#          type: private
+#          availabilityZone: us-west-2a
+#      - subnetRef:
+#          apiVersion: networking.idp.upbound.io
+#          grants:
+#          - "*"
+#          kind: Subnet
+#          name: az4
+#        parameters:
+#          cidrBlock: 192.168.192.0/18
+#          type: private
+#          availabilityZone: us-west-2b
+#

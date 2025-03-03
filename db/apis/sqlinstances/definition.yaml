@@ -1,0 +1,83 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: sqlinstances.db.idp.upbound.io
+  annotations:
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.password.passwordSecretRef","kinds":[{"apiVersion":"v1","kind":"Secret"}]}]}'
+
+spec:
+  group: db.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: SQLInstance
+    plural: sqlinstances
+  claimNames:
+    kind: SQLInstanceClaim
+    plural: sqlinstanceclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: SQLInstance is the Schema for the SQLInstance API.
+        properties:
+          spec:
+            description: SQLInstanceSpec defines the desired state of SQLInstance.
+            properties:
+              parameters:
+                properties:
+                  engine:
+                    type: string
+                  engineVersion:
+                    type: string
+                  instanceClass:
+                    type: string
+                  networkRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  password:
+                    properties:
+                      autoGeneratePassword:
+                        type: boolean
+                      passwordSecretKey:
+                        type: string
+                      passwordSecretRef:
+                        properties:
+                          apiVersion:
+                            type: string
+                          grants:
+                            items:
+                              type: string
+                            type: array
+                          kind:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                    type: object
+                  region:
+                    type: string
+                  storageGB:
+                    type: number
+                type: object
+            type: object
+          status:
+            description: SQLInstanceStatus defines the observed state of SQLInstance.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

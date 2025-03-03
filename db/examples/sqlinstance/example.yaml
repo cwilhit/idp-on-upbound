@@ -1,0 +1,28 @@
+apiVersion: db.idp.upbound.io/v1alpha1
+kind: SQLInstanceClaim
+metadata:
+  name: example
+  namespace: default
+spec:
+  parameters:
+    engine: postgres
+    engineVersion: '12'
+    instanceClass: db.t3
+    networkRef:
+      apiVersion: networking.idp.upbound.io
+      grants:
+        - Observe
+      kind: Network
+      name: db-network
+    password:
+      autoGeneratePassword: false
+      passwordSecretKey: password
+      passwordSecretRef:
+        apiVersion: v1
+        grants:
+          - "*"
+        kind: Secret
+        name: db-secret
+        namespace: default
+    region: EU West
+    storageGB: 10
