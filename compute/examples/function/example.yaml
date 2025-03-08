@@ -1,0 +1,12 @@
+apiVersion: compute.idp.upbound.io/v1alpha1
+kind: Function
+metadata:
+  name: example
+spec: 
+  parameters:
+    region: "us-west-1"
+    deployment:
+      bucketName: "my-deploy-bucket"
+      bucketObjectKey: "my-key"
+      bucketObjectVersion: "v1"
+      handler: "main.py"

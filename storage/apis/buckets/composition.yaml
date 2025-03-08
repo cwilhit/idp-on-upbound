@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: buckets.storage.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: storage.idp.upbound.io/v1alpha1
+    kind: Bucket
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: acmeco-storagecompose-bucket
+    step: compose-bucket
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

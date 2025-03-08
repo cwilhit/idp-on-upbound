@@ -1,0 +1,56 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: applications.compute.idp.upbound.io
+spec:
+  group: compute.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Application
+    plural: applications
+  claimNames:
+    kind: ApplicationClaim
+    plural: applicationclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Application is the Schema for the Application API.
+        properties:
+          spec:
+            description: ApplicationSpec defines the desired state of Application.
+            properties:
+              parameters:
+                properties:
+                  application:
+                    properties:
+                      image:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  resources:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        s3:
+                          properties:
+                            bucketName:
+                              type: string
+                          type: object
+                        type:
+                          type: string
+                      type: object
+                    type: array
+                type: object
+            type: object
+          status:
+            description: ApplicationStatus defines the observed state of Application.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

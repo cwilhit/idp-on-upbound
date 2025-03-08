@@ -1,0 +1,37 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: serviceaccounts.iam.idp.upbound.io
+spec:
+  group: iam.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: ServiceAccount
+    plural: serviceaccounts
+  claimNames:
+    kind: ServiceAccountClaim
+    plural: serviceaccountclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: ServiceAccount is the Schema for the ServiceAccount API.
+        properties:
+          spec:
+            description: ServiceAccountSpec defines the desired state of ServiceAccount.
+            properties:
+              parameters:
+                properties:
+                  billingAccount:
+                    type: string
+                type: object
+            type: object
+          status:
+            description: ServiceAccountStatus defines the observed state of ServiceAccount.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

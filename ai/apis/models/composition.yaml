@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: models.ai.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: ai.idp.upbound.io/v1alpha1
+    kind: Model
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: acmeco-aicompose-model
+    step: compose-model
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

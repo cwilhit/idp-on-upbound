@@ -9,11 +9,12 @@ spec:
     vpcCidrBlock: 192.168.0.0/16
     subnets:
       - subnetRef:
-          apiVersion: networking.idp.upbound.io
+          apiVersion: networking.idp.upbound.io/v1alpha1
           grants:
           - "*"
           kind: SubnetClaim
           name: example-az1
+          namespace: default
         parameters:
           cidrBlock: 192.168.0.0/18
           type: public

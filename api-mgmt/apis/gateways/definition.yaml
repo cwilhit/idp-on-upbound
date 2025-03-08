@@ -1,0 +1,50 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: gateways.apimgmt.idp.upbound.io
+spec:
+  group: apimgmt.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Gateway
+    plural: gateways
+  claimNames:
+    kind: GatewayClaim
+    plural: gatewayclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Gateway is the Schema for the Gateway API.
+        properties:
+          spec:
+            description: GatewaySpec defines the desired state of Gateway.
+            properties:
+              parameters:
+                properties:
+                  addons:
+                    properties:
+                      apiSecurity:
+                        properties:
+                          enabled:
+                            type: boolean
+                        type: object
+                      logs:
+                        properties:
+                          enabled:
+                            type: boolean
+                        type: object
+                    type: object
+                  sla:
+                    type: string
+                type: object
+            type: object
+          status:
+            description: GatewayStatus defines the observed state of Gateway.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

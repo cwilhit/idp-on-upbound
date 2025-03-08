@@ -38,12 +38,13 @@ _subnets = [upboundv1alpha1.ReferencedObject {
         deletionPolicy: "Orphan"
         composite = {
             apiVersion: "networking.idp.upbound.io/v1alpha1"
-            jsonPath: ".spec.parameters.subnets.items.subnetRef"
+            jsonPath: ".spec.parameters.subnets[${i}].subnetRef"
             kind: "Network"
             name: oxr.metadata.name
         }
         forProvider.manifest = networkingv1alpha1.SubnetClaim {
             metadata: _metadata("${snet.subnetRef.name}-${i}")
+            metadata.name = parameters.subnets[i].subnetRef.name
             spec.parameters = networkingv1alpha1.NetworkingIdpUpboundIoV1alpha1SubnetClaimSpecParameters{**snet.parameters} 
         }
     }

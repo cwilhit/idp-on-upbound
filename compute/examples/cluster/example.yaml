@@ -1,0 +1,8 @@
+apiVersion: compute.idp.upbound.io/v1alpha1
+kind: Cluster
+metadata:
+  name: example
+spec: 
+  parameters:
+    nodes: 2
+    sku: "d2sv3"

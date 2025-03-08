@@ -1,0 +1,55 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: models.ai.idp.upbound.io
+spec:
+  group: ai.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Model
+    plural: models
+  claimNames:
+    kind: ModelClaim
+    plural: modelclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Model is the Schema for the Model API.
+        properties:
+          spec:
+            description: ModelSpec defines the desired state of Model.
+            properties:
+              parameters:
+                properties:
+                  clusterRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  model:
+                    properties:
+                      name:
+                        type: string
+                      path:
+                        type: string
+                    type: object
+                type: object
+            type: object
+          status:
+            description: ModelStatus defines the observed state of Model.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

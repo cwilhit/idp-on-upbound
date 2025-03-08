@@ -1,5 +1,5 @@
 apiVersion: networking.idp.upbound.io/v1alpha1
-kind: Subnet
+kind: SubnetClaim
 metadata:
   name: example-az1
 spec:

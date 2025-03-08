@@ -1,0 +1,8 @@
+apiVersion: compute.idp.upbound.io/v1alpha1
+kind: VirtualMachine
+metadata:
+  name: example
+spec:
+  parameters:
+    image: "windows"
+    sku: "d2sv3"

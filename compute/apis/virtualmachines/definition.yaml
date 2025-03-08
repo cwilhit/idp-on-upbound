@@ -1,0 +1,39 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: virtualmachines.compute.idp.upbound.io
+spec:
+  group: compute.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: VirtualMachine
+    plural: virtualmachines
+  claimNames:
+    kind: VirtualMachineClaim
+    plural: virtualmachineclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: VirtualMachine is the Schema for the VirtualMachine API.
+        properties:
+          spec:
+            description: VirtualMachineSpec defines the desired state of VirtualMachine.
+            properties:
+              parameters:
+                properties:
+                  image:
+                    type: string
+                  sku:
+                    type: string
+                type: object
+            type: object
+          status:
+            description: VirtualMachineStatus defines the observed state of VirtualMachine.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

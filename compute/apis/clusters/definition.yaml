@@ -1,0 +1,31 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: clusters.compute.idp.upbound.io
+spec:
+  group: compute.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Cluster
+    plural: clusters
+  claimNames:
+    kind: ClusterClaim
+    plural: clusterclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Cluster is the Schema for the Cluster API.
+        properties:
+          spec:
+            description: ClusterSpec defines the desired state of Cluster.
+            type: object
+          status:
+            description: ClusterStatus defines the observed state of Cluster.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

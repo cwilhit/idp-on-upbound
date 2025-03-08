@@ -1,0 +1,37 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: accounts.iam.idp.upbound.io
+spec:
+  group: iam.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Account
+    plural: accounts
+  claimNames:
+    kind: AccountClaim
+    plural: accountclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Account is the Schema for the Account API.
+        properties:
+          spec:
+            description: AccountSpec defines the desired state of Account.
+            properties:
+              parameters:
+                properties:
+                  billingAccount:
+                    type: string
+                type: object
+            type: object
+          status:
+            description: AccountStatus defines the observed state of Account.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: databricks.analytics.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: analytics.idp.upbound.io/v1alpha1
+    kind: Databricks
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: acmeco-analyticscompose-databricks
+    step: compose-databricks
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

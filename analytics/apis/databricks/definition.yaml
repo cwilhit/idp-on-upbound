@@ -1,0 +1,50 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: databricks.analytics.idp.upbound.io
+spec:
+  group: analytics.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: Databricks
+    plural: databricks
+  claimNames:
+    kind: DatabricksClaim
+    plural: databricksclaims
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: Databricks is the Schema for the Databricks API.
+        properties:
+          spec:
+            description: DatabricksSpec defines the desired state of Databricks.
+            properties:
+              parameters:
+                properties:
+                  networkRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  region:
+                    type: string
+                type: object
+            type: object
+          status:
+            description: DatabricksStatus defines the observed state of Databricks.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

@@ -1,0 +1,7 @@
+apiVersion: iam.idp.upbound.io/v1alpha1
+kind: Account
+metadata:
+  name: example
+spec:
+  parameters:
+    billingAccount: "123456"

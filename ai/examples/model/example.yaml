@@ -1,0 +1,15 @@
+apiVersion: ai.idp.upbound.io/v1alpha1
+kind: Model
+metadata:
+  name: example
+spec:
+  parameters:
+    model:
+      name: "falcon-7b"
+      path: "https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml"
+    clusterRef:
+      apiVersion: compute.idp.upbound.io
+      grants:
+        - Observe
+      kind: Cluster
+      name: app-cluster

@@ -3,8 +3,11 @@ kind: CompositeResourceDefinition
 metadata:
   name: networks.networking.idp.upbound.io
   annotations:
-    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.subnets.items.subnetRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"SubnetClaim"}]}]}'
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.subnets[0].subnetRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"SubnetClaim"}]}]}'
 spec:
+  metadata:
+    annotations:
+      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.subnets[0].subnetRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"SubnetClaim"}]}]}'
   group: networking.idp.upbound.io
   names:
     categories:
@@ -51,6 +54,8 @@ spec:
                             kind:
                               type: string
                             name:
+                              type: string
+                            namespace:
                               type: string
                           type: object
                       type: object

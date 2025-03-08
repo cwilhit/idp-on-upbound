@@ -1,0 +1,7 @@
+apiVersion: storage.idp.upbound.io/v1alpha1
+kind: Bucket
+metadata:
+  name: example
+spec:
+  parameters:
+    region: "us-west-1"
