@@ -35,7 +35,7 @@ _secret = upboundv1alpha1.ReferencedObject {
         managementPolicies = [
             "Observe", "Create", "Delete"
         ]
-        deletionPolicy: "Orphan"
+        deletionPolicy: "Delete"
         ownerPolicy: "OnCreate"
         composite = {
             apiVersion: "db.idp.upbound.io/v1alpha1"
@@ -55,4 +55,25 @@ _secret = upboundv1alpha1.ReferencedObject {
     }
 }
 
-items = _items + [_secret]
+_networkRef = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("network-ref")
+    spec = {
+        managementPolicies = [
+            "Observe"
+        ]
+        deletionPolicy: "Orphan"
+        composite = {
+            apiVersion: "db.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.networkRef"
+            kind: "SQLInstance"
+            name: oxr.metadata.name
+        }
+        # forProvider.manifest = {
+        #    kind: "NetworkClaim"
+        #    apiVersion: "networking.idp.upbound.io/v1alpha1"
+        #    metadata.name: parameters.networkRef.name
+        #}
+    }
+}
+
+items = _items + [_secret, _networkRef]

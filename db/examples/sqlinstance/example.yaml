@@ -12,8 +12,8 @@ spec:
       apiVersion: networking.idp.upbound.io
       grants:
         - Observe
-      kind: Network
-      name: db-network
+      kind: NetworkClaim
+      name: example # This references the NetworkClaim/example in the other project in this monorepo
     password:
       autoGeneratePassword: false
       passwordSecretKey: password

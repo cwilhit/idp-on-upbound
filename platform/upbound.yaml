@@ -5,7 +5,7 @@ metadata:
 spec:
   apiDependencies:
   - configuration: xpkg.upbound.io/upbound/idp-networking
-    version: v0.0.0-1740408004
+    version: v0.0.0-1741442021 # This works
   - configuration: xpkg.upbound.io/upbound/idp-iam
     version: v0.0.0-1740408004
   - configuration: xpkg.upbound.io/upbound/idp-db
