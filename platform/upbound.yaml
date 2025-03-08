@@ -1,0 +1,27 @@
+apiVersion: meta.dev.upbound.io/v1alpha1
+kind: Project
+metadata:
+  name: platform
+spec:
+  apiDependencies:
+  - configuration: xpkg.upbound.io/upbound/idp-networking
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-iam
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-db
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-compute
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-api-mgmt
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-analytics
+    version: v0.0.0-1740408004
+  - configuration: xpkg.upbound.io/upbound/idp-ai
+    version: v0.0.0-1740408004
+  description: This is where you can describe your project.
+  license: Apache-2.0
+  maintainer: Upbound User <user@example.com>
+  readme: |
+    This is where you can add a readme for your project.
+  repository: xpkg.dev-deba7a0e.u6d.dev/upbound/platform
+  source: github.com/upbound/project-template
