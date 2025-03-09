@@ -1,5 +1,6 @@
 
 import models.io.upbound.idp.compute.v1alpha1 as computev1alpha1
+import models.io.upbound.idp.iam.v1alpha1 as iamv1alpha1
 import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 import models.io.nop.v1alpha1 as nopv1alpha1
 import models.io.upbound.v1alpha1 as upboundv1alpha1
@@ -45,4 +46,26 @@ _networkRef = upboundv1alpha1.ReferencedObject {
     }
 }
 
-items = _items + [_networkRef]
+_saRef = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("sa-ref")
+    spec = {
+        managementPolicies = [
+            "*"
+        ]
+        deletionPolicy: "Delete"
+        composite = {
+            apiVersion: "compute.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.serviceAccountRef"
+            kind: "Cluster"
+            name: oxr.metadata.name
+        }
+        forProvider.manifest = iamv1alpha1.ServiceAccountClaim {
+            metadata.name = parameters.serviceAccountRef.name
+            spec.parameters = {
+                billingAccount: "123456"
+            }
+        }
+    }
+}
+
+items = _items + [_networkRef, _saRef]

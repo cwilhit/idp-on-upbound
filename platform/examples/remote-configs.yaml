@@ -17,7 +17,7 @@ kind: RemoteConfiguration
 metadata:
   name: upbound-idp-compute
 spec:
-  package: xpkg.upbound.io/upbound/idp-compute:v0.0.0-1741539253
+  package: xpkg.upbound.io/upbound/idp-compute:v0.0.0-1741554487
 ---
 apiVersion: pkg.upbound.io/v1alpha1
 kind: RemoteConfiguration

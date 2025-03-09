@@ -12,3 +12,9 @@ spec:
         - Observe
       kind: NetworkClaim
       name: example # This references the NetworkClaim/example in the other project in this monorepo
+    serviceAccountRef:
+      apiVersion: iam.idp.upbound.io/v1alpha1
+      grants:
+        - "*"
+      kind: ServiceAccountClaim
+      name: cluster-sa

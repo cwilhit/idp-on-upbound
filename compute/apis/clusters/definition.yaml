@@ -3,11 +3,11 @@ kind: CompositeResourceDefinition
 metadata:
   name: clusters.compute.idp.upbound.io
   annotations:
-    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}]}'
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}, {"jsonPath":".spec.parameters.serviceAccountRef","kinds":[{"apiVersion":"iam.idp.upbound.io","kind":"ServiceAccountClaim"}]}]}'
 spec:
   metadata:
     annotations:
-      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}]}'
+      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}, {"jsonPath":".spec.parameters.serviceAccountRef","kinds":[{"apiVersion":"iam.idp.upbound.io","kind":"ServiceAccountClaim"}]}]}'
   group: compute.idp.upbound.io
   names:
     categories:
@@ -30,6 +30,19 @@ spec:
               parameters:
                 properties:
                   networkRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  serviceAccountRef:
                     properties:
                       apiVersion:
                         type: string
