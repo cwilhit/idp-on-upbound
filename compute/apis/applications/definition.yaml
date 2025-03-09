@@ -26,25 +26,26 @@ spec:
                 properties:
                   application:
                     properties:
+                      clusterRef:
+                        properties:
+                          apiVersion:
+                            type: string
+                          grants:
+                            items:
+                              type: string
+                            type: array
+                          kind:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
                       image:
                         type: string
                       name:
                         type: string
                     type: object
-                  resources:
-                    items:
-                      properties:
-                        name:
-                          type: string
-                        s3:
-                          properties:
-                            bucketName:
-                              type: string
-                          type: object
-                        type:
-                          type: string
-                      type: object
-                    type: array
                 type: object
             type: object
           status:

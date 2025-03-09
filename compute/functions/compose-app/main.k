@@ -2,6 +2,7 @@
 import models.io.nop.v1alpha1 as nopv1alpha1
 import models.io.upbound.idp.compute.v1alpha1 as computev1alpha1
 import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
+import models.io.upbound.v1alpha1 as upboundv1alpha1
 
 oxr = option("params").oxr # observed composite resource
 _ocds = option("params").ocds # observed composed resources
@@ -17,7 +18,7 @@ _metadata = lambda name: str -> any {
 }
 
 _items = [nopv1alpha1.NopResource {
-    metadata: _metadata('ai-model')
+    metadata: _metadata('application')
     spec.forProvider = {
         fields: parameters
         conditionAfter = [{
@@ -27,4 +28,22 @@ _items = [nopv1alpha1.NopResource {
         }]
     }
 }]
-items = _items
+
+_clusterRef = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("cluster-ref")
+    spec = {
+        managementPolicies = [
+            "Observe"
+        ]
+        deletionPolicy: "Orphan"
+        composite = {
+            apiVersion: "compute.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.application.clusterRef"
+            kind: "Application"
+            name: oxr.metadata.name
+        }
+    }
+}
+
+
+items = _items + [_clusterRef]

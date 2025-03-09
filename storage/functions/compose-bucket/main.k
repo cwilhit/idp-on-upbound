@@ -8,7 +8,7 @@ _ocds = option("params").ocds # observed composed resources
 _dxr = option("params").dxr # desired composite resource
 dcds = option("params").dcds # desired composed resources
 parameters = storagev1alpha1.StorageIdpUpboundIoV1alpha1BucketSpecParameters { **oxr.spec.parameters }
-
+_useless = ""
 _metadata = lambda name: str -> any {
     { 
         annotations = { "krm.kcl.dev/composition-resource-name" = name }

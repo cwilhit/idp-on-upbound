@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: acmeco-storagecompose-bucket
+      name: upbound-idp-storagecompose-bucket
     step: compose-bucket
   - functionRef:
       name: crossplane-contrib-function-auto-ready

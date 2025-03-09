@@ -11,3 +11,9 @@ spec:
     - name: networking.idp.upbound.io
       dimensions:
         offering: networking
+    - name: compute.idp.upbound.io
+      dimensions:
+        offering: compute
+    - name: storage.idp.upbound.io
+      dimensions:
+        offering: storage

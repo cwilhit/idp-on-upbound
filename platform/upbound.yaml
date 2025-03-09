@@ -6,18 +6,18 @@ spec:
   apiDependencies:
   - configuration: xpkg.upbound.io/upbound/idp-networking
     version: v0.0.0-1741442021 # This works
-  - configuration: xpkg.upbound.io/upbound/idp-iam
-    version: v0.0.0-1740408004
   - configuration: xpkg.upbound.io/upbound/idp-db
     version: v0.0.0-1740408004
   - configuration: xpkg.upbound.io/upbound/idp-compute
     version: v0.0.0-1740408004
-  - configuration: xpkg.upbound.io/upbound/idp-api-mgmt
-    version: v0.0.0-1740408004
-  - configuration: xpkg.upbound.io/upbound/idp-analytics
-    version: v0.0.0-1740408004
-  - configuration: xpkg.upbound.io/upbound/idp-ai
-    version: v0.0.0-1740408004
+  #- configuration: xpkg.upbound.io/upbound/idp-iam
+  #  version: v0.0.0-1740408004
+  #- configuration: xpkg.upbound.io/upbound/idp-api-mgmt
+  #  version: v0.0.0-1740408004
+  #- configuration: xpkg.upbound.io/upbound/idp-analytics
+  #  version: v0.0.0-1740408004
+  #- configuration: xpkg.upbound.io/upbound/idp-ai
+  #  version: v0.0.0-1740408004
   description: This is where you can describe your project.
   license: Apache-2.0
   maintainer: Upbound User <user@example.com>

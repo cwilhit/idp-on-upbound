@@ -16,12 +16,22 @@ _metadata = lambda name: str -> any {
     }
 }
 parameters = dbv1alpha1.DbIdpUpboundIoV1alpha1SQLInstanceClaimSpecParameters { **oxr.spec.parameters }
-
+# _ocds["${_networkRefObj}"]?.Resource?.status.atProvider.manifest.metadata.uid
+_networkRefObj = "${oxr.metadata.name}-network-ref"
 _items = [nopv1alpha1.NopResource {
     metadata: _metadata('sql-instance')
     spec.forProvider = {
-        fields: parameters
-        fields.subnetPlacement: _ocds["${oxr.metadata.name}-network-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
+        fields = {
+            engine: parameters.engine
+            engineVersion: parameters.engineVersion
+            instanceClass: parameters.instanceClass
+            region: parameters.region
+            storageGb: parameters.storageGB
+            if _ocds["${_networkRefObj}"]:
+                subnetPlacement = _ocds["${_networkRefObj}"].Resource.Kind
+            else:
+                subnetPlacement = "None"
+        }
         conditionAfter = [{
             time: "5s"
             conditionStatus: "True"
@@ -69,12 +79,25 @@ _networkRef = upboundv1alpha1.ReferencedObject {
             kind: "SQLInstance"
             name: oxr.metadata.name
         }
-        # forProvider.manifest = {
-        #    kind: "NetworkClaim"
-        #    apiVersion: "networking.idp.upbound.io/v1alpha1"
-        #    metadata.name: parameters.networkRef.name
-        #}
     }
 }
 
-items = _items + [_secret, _networkRef]
+_usage = {
+    apiVersion: "apiextensions.crossplane.io/v1beta1"
+    kind: "Usage"
+    metadata = _metadata("referencedobj-usage")
+    spec = {
+        of = {
+            apiVersion: "db.idp.upbound.io/v1alpha1"
+            kind: "SQLInstance"
+            resourceRef.name: "${oxr.metadata.name}"
+        }
+        by = {
+            apiVersion: "references.upbound.io/v1alpha1"
+            kind: "ReferencedObject"
+            resourceRef.name: "${oxr.metadata.name}-sql-instance-secret-obj"
+        }
+    }
+}
+
+items = _items + [_secret, _networkRef, _usage]
