@@ -21,6 +21,7 @@ _items = [nopv1alpha1.NopResource {
     metadata: _metadata('application')
     spec.forProvider = {
         fields: parameters
+        fields.deployedOnto = _ocds["cluster-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
         conditionAfter = [{
             time: "5s"
             conditionStatus: "True"

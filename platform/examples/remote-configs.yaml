@@ -25,3 +25,17 @@ metadata:
   name: upbound-idp-storage
 spec:
   package: xpkg.upbound.io/upbound/idp-storage:v0.0.0-1741489092
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-ai
+spec:
+  package: xpkg.upbound.io/upbound/idp-ai:v0.0.0-1741546378
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-iam
+spec:
+  package: xpkg.upbound.io/upbound/idp-iam:v0.0.0-1741552938

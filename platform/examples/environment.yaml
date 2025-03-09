@@ -17,3 +17,9 @@ spec:
     - name: storage.idp.upbound.io
       dimensions:
         offering: storage
+    - name: ai.idp.upbound.io
+      dimensions:
+        offering: ai
+    - name: iam.idp.upbound.io
+      dimensions:
+        offering: iam

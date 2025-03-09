@@ -16,8 +16,7 @@ _metadata = lambda name: str -> any {
     }
 }
 parameters = dbv1alpha1.DbIdpUpboundIoV1alpha1SQLInstanceClaimSpecParameters { **oxr.spec.parameters }
-# _ocds["${_networkRefObj}"]?.Resource?.status.atProvider.manifest.metadata.uid
-_networkRefObj = "${oxr.metadata.name}-network-ref"
+
 _items = [nopv1alpha1.NopResource {
     metadata: _metadata('sql-instance')
     spec.forProvider = {
@@ -27,10 +26,7 @@ _items = [nopv1alpha1.NopResource {
             instanceClass: parameters.instanceClass
             region: parameters.region
             storageGb: parameters.storageGB
-            if _ocds["${_networkRefObj}"]:
-                subnetPlacement = _ocds["${_networkRefObj}"].Resource.Kind
-            else:
-                subnetPlacement = "None"
+            subnetPlacement = _ocds["network-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
         }
         conditionAfter = [{
             time: "5s"
@@ -39,6 +35,13 @@ _items = [nopv1alpha1.NopResource {
         }]
     }
 }]
+
+_dxr = {
+    **_dxr
+    status = {
+        subnetUsed: _ocds["network-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
+    }
+}
 
 _secret = upboundv1alpha1.ReferencedObject {
     metadata: _metadata("sql-instance-secret-obj")
@@ -100,4 +103,4 @@ _usage = {
     }
 }
 
-items = _items + [_secret, _networkRef, _usage]
+items = _items + [_secret, _networkRef, _usage, _dxr]

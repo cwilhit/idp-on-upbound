@@ -2,7 +2,12 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
   name: models.ai.idp.upbound.io
+  annotations:
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.clusterRef","kinds":[{"apiVersion":"compute.idp.upbound.io","kind":"ClusterClaim"}]}]}'
 spec:
+  metadata:
+    annotations:
+      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.clusterRef","kinds":[{"apiVersion":"compute.idp.upbound.io","kind":"ClusterClaim"}]}]}'
   group: ai.idp.upbound.io
   names:
     categories:
@@ -36,6 +41,8 @@ spec:
                         type: string
                       name:
                         type: string
+                      namespace:
+                        type: string
                     type: object
                   model:
                     properties:
@@ -49,6 +56,10 @@ spec:
           status:
             description: ModelStatus defines the observed state of Model.
             type: object
+            properties:
+              deployedOnto:
+                type: string
+                description: The cluster where this AI model is deployed to
         required:
         - spec
         type: object

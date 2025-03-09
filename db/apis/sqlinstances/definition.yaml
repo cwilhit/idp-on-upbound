@@ -79,6 +79,10 @@ spec:
           status:
             description: SQLInstanceStatus defines the observed state of SQLInstance.
             type: object
+            properties:
+              subnetUsed:
+                type: string
+                description: The network where this SQL instance is deployed into
         required:
         - spec
         type: object

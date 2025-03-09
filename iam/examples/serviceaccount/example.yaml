@@ -1,5 +1,5 @@
 apiVersion: iam.idp.upbound.io/v1alpha1
-kind: ServiceAccount
+kind: ServiceAccountClaim
 metadata:
   name: example
 spec:
