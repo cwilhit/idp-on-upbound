@@ -4,9 +4,10 @@ metadata:
   name: default
   namespace: default
 spec:
-  dimensions:
-    offering: db
   resourceGroups:
     - name: db.idp.upbound.io
       dimensions:
         offering: db
+    - name: networking.idp.upbound.io
+      dimensions:
+        offering: networking

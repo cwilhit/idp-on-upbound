@@ -3,6 +3,9 @@ kind: Project
 metadata:
   name: db
 spec:
+  apiDependencies:
+  - configuration: xpkg.upbound.io/upbound/idp-networking
+    version: v0.0.0-1741442021 # This works
   dependsOn:
   - function: xpkg.upbound.io/crossplane-contrib/function-auto-ready
     version: '>=v0.0.0'

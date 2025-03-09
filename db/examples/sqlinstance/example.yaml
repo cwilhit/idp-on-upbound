@@ -9,7 +9,7 @@ spec:
     engineVersion: '12'
     instanceClass: db.t3
     networkRef:
-      apiVersion: networking.idp.upbound.io
+      apiVersion: networking.idp.upbound.io/v1alpha1
       grants:
         - Observe
       kind: NetworkClaim

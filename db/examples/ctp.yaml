@@ -1,0 +1,11 @@
+apiVersion: spaces.upbound.io/v1beta1
+kind: ControlPlane
+metadata:
+  name: db
+  namespace: default
+  labels:
+    dimension.scheduling.upbound.io/offering: "db"
+spec:
+  crossplane:
+    autoUpgrade:
+      channel: Rapid

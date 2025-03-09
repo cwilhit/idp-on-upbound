@@ -21,6 +21,7 @@ _items = [nopv1alpha1.NopResource {
     metadata: _metadata('sql-instance')
     spec.forProvider = {
         fields: parameters
+        fields.subnetPlacement: _ocds["${oxr.metadata.name}-network-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
         conditionAfter = [{
             time: "5s"
             conditionStatus: "True"
@@ -33,7 +34,7 @@ _secret = upboundv1alpha1.ReferencedObject {
     metadata: _metadata("sql-instance-secret-obj")
     spec = {
         managementPolicies = [
-            "Observe", "Create", "Delete"
+            "*"
         ]
         deletionPolicy: "Delete"
         ownerPolicy: "OnCreate"

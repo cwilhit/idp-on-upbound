@@ -1,0 +1,13 @@
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-networking
+spec:
+  package: upbound/idp-networking:v0.0.0-1741442021
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-db
+spec:
+  package: upbound/idp-db:v0.0.0-1741452849

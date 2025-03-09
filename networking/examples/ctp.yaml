@@ -1,0 +1,11 @@
+apiVersion: spaces.upbound.io/v1beta1
+kind: ControlPlane
+metadata:
+  name: networking
+  namespace: default
+  labels:
+    dimension.scheduling.upbound.io/offering: "networking"
+spec:
+  crossplane:
+    autoUpgrade:
+      channel: Rapid
