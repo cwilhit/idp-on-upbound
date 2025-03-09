@@ -34,6 +34,9 @@ The composite types linked above are meant to illustrate how to use the [control
 
 ## Architecture
 
+> [!TIP]
+> For ease of navigability, this reference architecture is defined as a monorepo. You don't have to do it this way and have flexibility to define each part in its own repo if you wish.
+
 This platform defines a two-tier topology of control planes that work together to provide a unified experience for platform consumers:
 
 * **platform control planes:** There's only one platform control plane deployed in this reference architecture. You can find it's definition in the [platform](platform/) folder. All API requests made by consumers flows through this control plane to lower-level control planes.
@@ -46,6 +49,90 @@ This platform defines a two-tier topology of control planes that work together t
   * [ai](ai/examples/ctp.yaml)
 
 Each link above is to the definition of the control plane resource deployed with the corresponding project it's defined next to. 
+
+The single **platform control plane** is defined [here](platform/examples/ctp.yaml). It doesn't define any of its own APIs. Instead, each API set defined by each service-level control plane gets deployed to the platform control plane as [RemoteConfigurations](https://docs.upbound.io/deploy/control-plane-topologies/#install-a-_remoteconfiguration_). This list of API dependencies is defined [here](platform/examples/remote-configs.yaml).
+
+Once all control planes get deployed, create an [Environment](https://docs.upbound.io/deploy/control-plane-topologies/#use-an-_environment_-to-route-resources) to configure how resources get routed to service-level control planes. This reference architecture employs a [basic routing scheme](platform/examples/environment.yaml) to map API groups to their corresponding service-level control planes 1:1.
+
+## Quickstart
+
+### Prerequisites
+
+Before you can deploy the reference platform you should install the `up` CLI.
+
+To install `up` run this install script:
+```console
+curl -sL https://cli.upbound.io | sh
+```
+See [up docs](https://docs.upbound.io/cli/) for more install options.
+
+To install `crossplane` CLI follow https://docs.crossplane.io/latest/cli/#installing-the-cli
+
+### Deploy the infrastructure
+
+Clone this repository to your machine and change your current directory to its root. Then, log on to Upbound:
+
+```console
+up login
+```
+
+Connect to a Cloud Space in Upbound where the _Topologies_ private preview feature is enabled:
+
+```console
+up ctx upbound/upbound-gcp-us-central-1-preview/default
+```
+
+Deploy each service-level control plane. A sample resource configuration is linked in the previous section:
+
+```console
+kubectl apply -f compute/examples/ctp.yaml \
+  -f storage/examples/ctp.yaml \
+  -f networking/examples/ctp.yaml \
+  -f iam/examples/ctp.yaml \
+  -f db/examples/ctp.yaml \
+  -f ai/examples/ctp.yaml
+```
+
+Once each control plane becomes healthy, connect to it and install the corresponding configuration built from its control plane project:
+
+```console
+up ctx ./compute
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-compute:v0.0.0-1741555865
+
+up ctx ../storage
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-storage:v0.0.0-1741489092
+
+up ctx ../networking
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-networking:v0.0.0-1741442021
+
+up ctx ../db
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-db:v0.0.0-1741552381
+
+up ctx ../iam
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-iam:v0.0.0-1741553829
+
+up ctx ../ai
+crossplane xpkg install configuration xpkg.upbound.io/upbound/idp-ai:v0.0.0-1741550279
+```
+
+Deploy the platform control plane:
+
+```console
+up ctx ..
+kubectl apply -f platform/examples/ctp.yaml
+```
+
+Configure the platform control plane with Remote Configurations and routing:
+
+```
+up ctx ./portal
+kubectl apply -f platform/examples/remote-configs.yaml \
+  -f environment.yaml
+```
+
+### Deploy example resources
+
+Each control plane project contains example manifests for resource claims. Deploy these to the platform control plane (portal) and watch how they get routed and created on lower-level control planes.
 
 ## Questions?
 
