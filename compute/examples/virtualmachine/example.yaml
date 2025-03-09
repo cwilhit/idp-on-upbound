@@ -1,5 +1,5 @@
 apiVersion: compute.idp.upbound.io/v1alpha1
-kind: VirtualMachine
+kind: VirtualMachineClaim
 metadata:
   name: example
 spec:

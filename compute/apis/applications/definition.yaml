@@ -2,7 +2,12 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
   name: applications.compute.idp.upbound.io
+  annotations:
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.application.clusterRef","kinds":[{"apiVersion":"compute.idp.upbound.io","kind":"ClusterClaim"}]}]}'
 spec:
+  metadata:
+    annotations:
+      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.application.clusterRef","kinds":[{"apiVersion":"compute.idp.upbound.io","kind":"ClusterClaim"}]}]}'
   group: compute.idp.upbound.io
   names:
     categories:

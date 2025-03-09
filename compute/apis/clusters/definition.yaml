@@ -2,7 +2,12 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
   name: clusters.compute.idp.upbound.io
+  annotations:
+    references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}]}'
 spec:
+  metadata:
+    annotations:
+      references.upbound.io/schema: '{"apiVersion":"references.upbound.io/v1alpha1","kind":"ReferenceSchema","references":[{"jsonPath":".spec.parameters.networkRef","kinds":[{"apiVersion":"networking.idp.upbound.io","kind":"NetworkClaim"}]}]}'
   group: compute.idp.upbound.io
   names:
     categories:
@@ -21,6 +26,27 @@ spec:
         properties:
           spec:
             description: ClusterSpec defines the desired state of Cluster.
+            properties:
+              parameters:
+                properties:
+                  networkRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    type: object
+                  nodes:
+                    type: number
+                  sku:
+                    type: string
+                type: object
             type: object
           status:
             description: ClusterStatus defines the observed state of Cluster.

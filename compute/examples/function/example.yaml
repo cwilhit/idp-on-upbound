@@ -1,5 +1,5 @@
 apiVersion: compute.idp.upbound.io/v1alpha1
-kind: Function
+kind: FunctionClaim
 metadata:
   name: example
 spec: 

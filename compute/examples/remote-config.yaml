@@ -1,0 +1,6 @@
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-networking
+spec:
+  package: xpkg.upbound.io/upbound/idp-networking:v0.0.0-1741442021

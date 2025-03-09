@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: acmeco-computecompose-app
+      name: upbound-idp-computecompose-app
     step: compose-app
   - functionRef:
       name: crossplane-contrib-function-auto-ready

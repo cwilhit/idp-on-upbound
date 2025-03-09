@@ -1,8 +1,14 @@
 apiVersion: compute.idp.upbound.io/v1alpha1
-kind: Cluster
+kind: ClusterClaim
 metadata:
   name: example
 spec: 
   parameters:
     nodes: 2
     sku: "d2sv3"
+    networkRef:
+      apiVersion: networking.idp.upbound.io/v1alpha1
+      grants:
+        - Observe
+      kind: NetworkClaim
+      name: example # This references the NetworkClaim/example in the other project in this monorepo

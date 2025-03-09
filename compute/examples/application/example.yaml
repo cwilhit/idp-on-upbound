@@ -1,5 +1,5 @@
 apiVersion: compute.idp.upbound.io/v1alpha1
-kind: Application
+kind: ApplicationClaim
 metadata:
   name: example
 spec:
