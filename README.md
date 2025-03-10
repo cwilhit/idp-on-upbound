@@ -5,6 +5,8 @@ This repository contains a reference platform for an Internal Developer Platform
 > [!IMPORTANT]
 > This platform uses _control plane topologies_, a [private preview feature set](https://docs.upbound.io/deploy/control-plane-topologies/) available only on Upbound. You can't deploy your own instance of this repository's contents unless you have these features enabled.
 
+<img width="2555" alt="idp-portal" src="https://github.com/user-attachments/assets/9f5be4c2-1a86-4a8a-b6d6-173630a0c4c7" />
+
 ## Overview
 
 This platform defines a set of APIs for a variety of cloud resources app developers might use as part of their day-to-day work. For ease of navigability, this reference architecture is defined as a monorepo, composed of several [control plane projects](https://docs.upbound.io/learn/core-concepts/projects/):
