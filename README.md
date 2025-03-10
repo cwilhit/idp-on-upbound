@@ -50,7 +50,7 @@ graph TD
 ```
 
 * **platform control planes:** There's only one platform control plane deployed in this reference architecture. You can find it's definition in the [platform](platform/) folder. All API requests made by consumers flows through this control plane to lower-level control planes.
-* **service-level control planes:** Individual platform teams own service-level control planes. They define a part of the total APIs offered on the platform. The platform control plane routes all requests to service-level control planes. This reference architecture deploys a control plane on a domain boundary:
+* **service-level control planes:** Individual platform teams own service-level control planes. They define a part of the total APIs offered on the platform. The platform control plane routes all requests to service-level control planes. They're called _service-level_ control planes because they're responsible for providing composite API types that deliver a managed service experiences in the form of `${resource}-as-a-service`. This reference architecture deploys a control plane on a domain boundary:
   * [compute](compute/examples/ctp.yaml)
   * [networking](networking/examples/ctp.yaml)
   * [iam](iam/examples/ctp.yaml)
@@ -145,6 +145,169 @@ kubectl apply -f platform/examples/remote-configs.yaml \
 ### Deploy example resources
 
 Each control plane project contains example manifests for resource claims. Deploy these to the platform control plane (portal) and watch how they get routed and created on lower-level control planes.
+
+## Exploring API relationships
+
+This reference architecture demonstrates some ways you can use _Topology_ features to compartmentalize your platform and build powerful composite APIs.
+
+### Generic composite API
+
+Starting with the basics, the first composite API type demonstrated on this platform is a self-contained API like [_VirtualMachine_](compute/apis/virtualmachines/definition.yaml). This API doesn't depend on other composite types defined and reconciled by other service control planes. It's solely responsible for composing a set of resources that are self-contained within the control plane. This method is the canonical method taught in OSS Crossplane for defining a new composite type.
+
+### Reference another composite API
+
+The [_Application_](compute/apis/applications/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API. The _Application_ resource is a simplified representation of a containerized deployment to a Kubernetes cluster. In its API schema, you can see it requires a reference to a Kubernetes cluster at `.spec.parameters.application.clusterRef`.
+
+In the _ApplicationClaim_ [example](compute/examples/application/example.yaml), the manifest demonstrates providing a reference to a _ClusterClaim_ resource with the name "example":
+
+```yaml
+apiVersion: compute.idp.upbound.io/v1alpha1
+kind: ApplicationClaim
+metadata:
+  name: example
+spec:
+  parameters:
+    application:
+      name: guestbook-ui
+      image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+      clusterRef:
+        apiVersion: compute.idp.upbound.io/v1alpha1
+        grants:
+        - "Observe"
+        kind: ClusterClaim
+        name: example
+        namespace: default
+```
+
+The `grants` field under the `clusterRef` means the creator of this _ApplicationClaim_ grants permission for the service control plane to resolve and observe the referenced cluster. The _Application_ composite API needs this permission because it needs to know which Kubernetes cluster to go create objects to deploy the workload into. You can see how this works in the composition:
+
+```python
+_items = [nopv1alpha1.NopResource {
+    metadata: _metadata('application')
+    spec.forProvider = {
+        fields: parameters
+        fields.deployedOnto = _ocds["cluster-ref"]?.Resource?.status?.atProvider?.manifest?.metadata?.uid or "None"
+        conditionAfter = [{
+            time: "5s"
+            conditionStatus: "True"
+            conditionType: "Ready"
+        }]
+    }
+}]
+
+_clusterRef = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("cluster-ref")
+    spec = {
+        managementPolicies = [
+            "Observe"
+        ]
+        deletionPolicy: "Orphan"
+        composite = {
+            apiVersion: "compute.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.application.clusterRef"
+            kind: "Application"
+            name: oxr.metadata.name
+        }
+    }
+}
+```
+
+The `cluster-ref` that gets created is a _ReferencedObject_, bringing it into the frame of the composition function execution pipeline. Once it's an observed composed resource, it's used to configure a field on the _NopResource_, which is meant to mimic a containerized deployment onto a Kubernetes cluster.
+
+### Reference and create another composite API
+
+The [_Cluster_](compute/apis/clusters/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API **and create it, if it doesn't exist**. The _Cluster_ resource is a simplified representation of a Kubernetes cluster. In its API schema, you can see it requires a reference to a service account at `.spec.parameters.serviceAccountRef`.
+
+In the _ClusterClaim_ [example](compute/examples/cluster/example.yaml), the manifest demonstrates providing a reference to a _ServiceAccountClaim_ resource with the name "cluster-sa":
+
+```yaml
+apiVersion: compute.idp.upbound.io/v1alpha1
+kind: ClusterClaim
+metadata:
+  name: example
+spec: 
+  parameters:
+    nodes: 2
+    sku: "d2sv3"
+    networkRef:
+      apiVersion: networking.idp.upbound.io/v1alpha1
+      grants:
+        - Observe
+      kind: NetworkClaim
+      name: example # This references the NetworkClaim/example in the other project in this monorepo
+    serviceAccountRef:
+      apiVersion: iam.idp.upbound.io/v1alpha1
+      grants:
+        - "*"
+      kind: ServiceAccountClaim
+      name: cluster-sa # This creates the service account, if it doesn't exist
+```
+
+The `grants` field under the `serviceAccountRef` means the creator of this _ClusterClaim_ grants permission for the service control plane to resolve, observe the referenced service account, and create it if it doesn't yet exist. Try it out -- apply the example _ClusterClaim_ without the referenced _ServiceAccountClaim_ existing and observe how one gets created. But importantly, the _ServiceAccount_ doesn't get created in the compute control plane, it gets created in the IAM control plane. You can see how this works in the composition:
+
+```python
+_saRef = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("sa-ref")
+    spec = {
+        managementPolicies = [
+            "*"
+        ]
+        deletionPolicy: "Delete"
+        composite = {
+            apiVersion: "compute.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.serviceAccountRef"
+            kind: "Cluster"
+            name: oxr.metadata.name
+        }
+        forProvider.manifest = iamv1alpha1.ServiceAccountClaim {
+            metadata.name = parameters.serviceAccountRef.name
+            spec.parameters = {
+                billingAccount: "123456"
+            }
+        }
+    }
+}
+```
+
+There's two things that happen in the _ReferencedObject_ that gets composed above:
+
+1. The _ReferencedObject_ being composed has a `managementPolicy` of `*`, giving it permission for the resource to get created.
+2. The _ReferencedObject_ `spec` includes a `forProvider.manifest`, which gets used during the create request to supply the parameters for the new resource to get created. In this case, it's a new _ServiceAccountClaim_ to pair with the creation of the Kubernetes cluster.
+
+### Reference and create another resource
+
+A variation of the above, the [_SQLInstance_](db/apis/sqlinstances/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to create a new Kubernetes secret alongside the _SQLInstance_, in the same control plane where the resources representing the database get composed. You can see how this works in the composition:
+
+```python
+_secret = upboundv1alpha1.ReferencedObject {
+    metadata: _metadata("sql-instance-secret-obj")
+    spec = {
+        managementPolicies = [
+            "*"
+        ]
+        deletionPolicy: "Delete"
+        ownerPolicy: "OnCreate"
+        composite = {
+            apiVersion: "db.idp.upbound.io/v1alpha1"
+            jsonPath: ".spec.parameters.password.passwordSecretRef"
+            kind: "SQLInstance"
+            name: oxr.metadata.name
+        }
+        forProvider.manifest = {
+            kind: "Secret"
+            apiVersion: "v1"
+            metadata.name: parameters.password.passwordSecretRef.name
+            metadata.namespace: "default"
+            stringData = {
+                password: "booyah"
+            }
+        }
+    }
+}
+```
+
+As in the previous section, this composition step includes a similar `forProvider.manifest` config to create the _Secret_. The difference is: this isn't creating a separate composite type on another control plane, it's creating another local resource in the same control plane.
+
 
 ## Questions?
 

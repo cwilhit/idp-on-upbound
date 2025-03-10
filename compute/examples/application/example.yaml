@@ -10,15 +10,7 @@ spec:
       clusterRef:
         apiVersion: compute.idp.upbound.io/v1alpha1
         grants:
-        - "*"
+        - "Observe"
         kind: ClusterClaim
         name: example
         namespace: default
-    # resources:
-    #- name: images
-    #  type: s3
-    #  s3:
-    #    bucketName: my-images-bucket
-    #- name: database
-    #  type: postgres
-    #  postgres: {}
