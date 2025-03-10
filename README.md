@@ -27,7 +27,7 @@ This platform defines a set of APIs for a variety of cloud resources app develop
 * [ai](ai/) is a control plane project that defines the following APIs:
   * [Model](ai/apis/models/definition.yaml) lets a developer deploy an AI Model to a Kubernetes cluster.
 
-The composite types linked above are meant to illustrate how to use the [control plane topology](https://docs.upbound.io/deploy/control-plane-topologies/) features. These composites compose:
+The composite types outlined above are meant to illustrate how to use the [control plane topology](https://docs.upbound.io/deploy/control-plane-topologies/) features. These composites don't compose real cloud resources, instead they use:
 
 * [_NopResources_](https://github.com/crossplane-contrib/provider-nop), a mock resource type that mimics deploying real cloud resources.
 * [_ReferencedObjects_](https://docs.upbound.io/deploy/control-plane-topologies/#compose-a-_referencedobject_), an Upbound-only resource type that lets you reference, observe, and potentially create resources defined by APIs offered by other **service-level control planes** powering your platform.
@@ -38,6 +38,16 @@ The composite types linked above are meant to illustrate how to use the [control
 ## Architecture
 
 This platform defines a two-tier topology of control planes that work together to provide a unified experience for platform consumers:
+
+```mermaid
+graph TD
+    A[Platform control plane] -->|routes compute APIs| B[Compute service control plane]
+    A --> |routes storage APIs| C[Storage service control plane]
+    A --> |routes networking APIs| D[Networking service control plane]
+    A --> |routes IAM APIs| E[IAM service control plane]
+    A --> |routes database APIs| F[Databases service control plane]
+    A --> |routes AI APIs| G[AI service control plane]
+```
 
 * **platform control planes:** There's only one platform control plane deployed in this reference architecture. You can find it's definition in the [platform](platform/) folder. All API requests made by consumers flows through this control plane to lower-level control planes.
 * **service-level control planes:** Individual platform teams own service-level control planes. They define a part of the total APIs offered on the platform. The platform control plane routes all requests to service-level control planes. This reference architecture deploys a control plane on a domain boundary:
