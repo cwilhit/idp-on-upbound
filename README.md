@@ -7,7 +7,7 @@ This repository contains a reference platform for an Internal Developer Platform
 
 ## Overview
 
-This platform defines a set of APIs for a variety of cloud resources app developers might use as part of their day-to-day work:
+This platform defines a set of APIs for a variety of cloud resources app developers might use as part of their day-to-day work. For ease of navigability, this reference architecture is defined as a monorepo, composed of several [control plane projects](https://docs.upbound.io/learn/core-concepts/projects/):
 
 * [compute](compute/) is a control plane project that defines the following APIs:
   * [Application](compute/apis/applications/definition.yaml) lets a developer deploy a basic containerized app onto a Kubernetes cluster.
@@ -32,10 +32,10 @@ The composite types linked above are meant to illustrate how to use the [control
 * [_NopResources_](https://github.com/crossplane-contrib/provider-nop), a mock resource type that mimics deploying real cloud resources.
 * [_ReferencedObjects_](https://docs.upbound.io/deploy/control-plane-topologies/#compose-a-_referencedobject_), an Upbound-only resource type that lets you reference, observe, and potentially create resources defined by APIs offered by other **service-level control planes** powering your platform.
 
-## Architecture
-
 > [!TIP]
 > For ease of navigability, this reference architecture is defined as a monorepo. You don't have to do it this way and have flexibility to define each part in its own repo if you wish.
+
+## Architecture
 
 This platform defines a two-tier topology of control planes that work together to provide a unified experience for platform consumers:
 
@@ -61,9 +61,11 @@ Once all control planes get deployed, create an [Environment](https://docs.upbou
 Before you can deploy the reference platform you should install the `up` CLI.
 
 To install `up` run this install script:
+
 ```console
 curl -sL https://cli.upbound.io | sh
 ```
+
 See [up docs](https://docs.upbound.io/cli/) for more install options.
 
 To install `crossplane` CLI follow https://docs.crossplane.io/latest/cli/#installing-the-cli
