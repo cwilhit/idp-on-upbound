@@ -306,8 +306,45 @@ _secret = upboundv1alpha1.ReferencedObject {
 }
 ```
 
-As in the previous section, this composition step includes a similar `forProvider.manifest` config to create the _Secret_. The difference is: this isn't creating a separate composite type on another control plane, it's creating another local resource in the same control plane.
+As in the earlier section, this composition step includes a similar `forProvider.manifest` config to create the _Secret_. The difference is: this isn't creating a separate composite type on another control plane, it's creating another local resource in the same control plane.
 
+## Routing setup
+
+We explained earlier how the platform control plane is the front door to the platform. All composite API requests are submitted to the platform control plane first, then get routed down to the appropriate service control plane. The routing configuration is defined in an _Environment_ resource type. This reference architecture uses a basic [configuration](platform/examples/environment.yaml):
+
+```yaml
+apiVersion: scheduling.upbound.io/v1alpha1
+kind: Environment
+metadata:
+  name: default
+  namespace: default
+spec:
+  resourceGroups:
+    - name: db.idp.upbound.io
+      dimensions:
+        offering: db
+    - name: networking.idp.upbound.io
+      dimensions:
+        offering: networking
+    - name: compute.idp.upbound.io
+      dimensions:
+        offering: compute
+    - name: storage.idp.upbound.io
+      dimensions:
+        offering: storage
+    - name: ai.idp.upbound.io
+      dimensions:
+        offering: ai
+    - name: iam.idp.upbound.io
+      dimensions:
+        offering: iam
+```
+
+_Environment_ is a namespace-scoped resource, so you can assign tenants of your platform to designated namespaces in the platform control plane. This lets you have tailored routing rules on a per-tenant / per-namespace basis, if desired. In the configuration for this reference architecture, there' a single _Environment_ defined for the `default` namespace in the platform control plane.
+
+For each resource API group offered in the platform control plane, it routes to the responsible service control plane. The format of the `spec.resourceGroups[*].name` matches that defined in a composite's `apiVersion` API group.
+
+_Environments_ rely on _dimensions_ being set on underlying control planes. These are applied as lables and can be found in each service control plane's config linked at the top of this document.
 
 ## Questions?
 
