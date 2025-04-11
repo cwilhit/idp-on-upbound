@@ -1,0 +1,53 @@
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-networking
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-networking:v0.0.0-1741442021
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-db
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-db:v0.0.0-1741452849
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-compute
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-compute:v0.0.0-1741554487
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-storage:v0.0.0-1741489092
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-ai
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-ai:v0.0.0-1741546378
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: RemoteConfiguration
+metadata:
+  name: upbound-idp-iam
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  package: xpkg.upbound.io/upbound/idp-iam:v0.0.0-1741552938
