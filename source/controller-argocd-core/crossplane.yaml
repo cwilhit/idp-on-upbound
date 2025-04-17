@@ -1,0 +1,27 @@
+apiVersion: meta.pkg.upbound.io/v1alpha1
+kind: Controller
+metadata:
+  annotations:
+    friendly-name.meta.crossplane.io: Controller ArgoCD
+    meta.crossplane.io/description: |
+      The ArgoCD Controller enables continuous delivery and declarative configuration
+      management for Kubernetes applications using GitOps principles.      
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/maintainer: Upbound Maintainers <info@upbound.io>
+    meta.crossplane.io/readme: |
+      ArgoCD is a declarative GitOps continuous delivery tool for Kubernetes that
+      follows the GitOps methodology to manage infrastructure and application
+      configurations.
+      meta.crossplane.io/source: https://github.com/argoproj/argo-cd      
+  name: argocd
+spec:
+  packagingType: Helm
+  helm:
+    releaseName: argo-cd
+    releaseNamespace: argocd
+    values:
+      argo-cd:
+        dex:
+          enabled: false
+        notifications:
+          enabled: false

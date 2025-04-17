@@ -1,7 +1,7 @@
 apiVersion: meta.dev.upbound.io/v1alpha1
 kind: Project
 metadata:
-  name: bootstrap
+  name: fabric
 spec:
   dependsOn:
   - provider: xpkg.upbound.io/upbound/provider-kubernetes
@@ -9,12 +9,12 @@ spec:
   - function: xpkg.upbound.io/crossplane-contrib/function-auto-ready
     version: '>=v0.0.0'
   # This isn't supported yet  
-  # - controller: xpkg.upbound.io/upbound/controller-argocd
-  #   version: '>=v7.8.8'
+  # - controller: xpkg.upbound.io/upbound/controller-argocd-core
+  #   version: '>=v7.8.26'
   description: This is where you can describe your project.
   license: Apache-2.0
   maintainer: Upbound User <user@example.com>
   readme: |
     This is where you can add a readme for your project.
-  repository: xpkg.upbound.io/upbound/bootstrap
+  repository: xpkg.upbound.io/upbound/fabric
   source: github.com/upbound/project-template
