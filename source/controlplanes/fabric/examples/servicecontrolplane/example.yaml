@@ -1,0 +1,15 @@
+apiVersion: bootstrap.idp.upbound.io/v1alpha1
+kind: ServiceControlPlane
+metadata:
+  name: example
+  namespace: default
+spec:
+  parameters:
+    serviceProviderRef: 
+      apiVersion: bootstrap.idp.upbound.io/v1alpha1
+      grants:
+      - "Observe"
+      kind: ServiceProvider
+      name: example
+      namespace: default
+

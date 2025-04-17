@@ -1,0 +1,51 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xservicecontrolplanes.bootstrap.idp.upbound.io
+spec:
+  claimNames:
+    kind: ServiceControlPlane
+    plural: servicecontrolplanes
+  group: bootstrap.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: XServiceControlPlane
+    plural: xservicecontrolplanes
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: ServiceControlPlane is the Schema for the ServiceControlPlane
+          API.
+        properties:
+          spec:
+            description: ServiceControlPlaneSpec defines the desired state of ServiceControlPlane.
+            properties:
+              parameters:
+                properties:
+                  serviceProviderRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      grants:
+                        items:
+                          type: string
+                        type: array
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    type: object
+                type: object
+            type: object
+          status:
+            description: ServiceControlPlaneStatus defines the observed state of ServiceControlPlane.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

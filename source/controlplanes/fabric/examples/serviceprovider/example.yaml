@@ -1,0 +1,6 @@
+apiVersion: bootstrap.idp.upbound.io/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: example
+  namespace: default
+spec: {}

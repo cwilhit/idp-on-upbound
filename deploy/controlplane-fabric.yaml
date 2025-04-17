@@ -7,29 +7,3 @@ spec:
   crossplane:
     autoUpgrade:
       channel: Rapid
----
-# Deploy the Argo CD core controller into the fabric control plane
-apiVersion: pkg.upbound.io/v1alpha1
-kind: Controller
-metadata:
-  name: controller-argocd-core
-spec:
-  package: xpkg.upbound.io/upbound/controller-argocd-core:v7.8.26
----
-# Deploy the Argo Application to sync claims to the fabric control plane
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fabric-configuration
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/cwilhit/idp-on-upbound.git
-    targetRevision: HEAD
-    path: configuration/fabric
-    directory:
-      recurse: true
-  destination:
-    name: fabric
-    namespace: default

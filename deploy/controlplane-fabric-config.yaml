@@ -1,0 +1,123 @@
+# Deploy the Argo CD core controller into the fabric control plane
+apiVersion: pkg.upbound.io/v1alpha1
+kind: Controller
+metadata:
+  name: controller-argocd-core
+spec:
+  package: xpkg.upbound.io/upbound/controller-argocd-core:v7.8.26
+  runtimeConfigRef:
+    name: argocd
+---
+apiVersion: pkg.upbound.io/v1alpha1
+kind: ControllerRuntimeConfig
+metadata:
+  name: argocd
+spec:
+  helm:
+    values:
+      dex:
+        enabled: false
+      notifications:
+        enabled: false
+      controller:
+        volumes:
+          - name: up-plugin
+            emptyDir: {}
+          - name: up-home
+            emptyDir: {}
+        volumeMounts:
+          - name: up-plugin
+            mountPath: /usr/local/bin/up
+            subPath: up
+          - name: up-home
+            mountPath: /home/argocd/.up
+        initContainers:
+          - name: up-plugin
+            image: xpkg.upbound.io/upbound/up-cli:v0.39.0-0.rc.0.102.g3f384b68
+            command: ["cp"]
+            args:
+              - /usr/local/bin/up
+              - /plugin/up
+            volumeMounts:
+              - name: up-plugin
+                mountPath: /plugin
+      server:
+        volumes:
+          - name: up-plugin
+            emptyDir: {}
+          - name: up-home
+            emptyDir: {}
+        volumeMounts:
+          - name: up-plugin
+            mountPath: /usr/local/bin/up
+            subPath: up
+          - name: up-home
+            mountPath: /home/argocd/.up
+        initContainers:
+          - name: up-plugin
+            image: xpkg.upbound.io/upbound/up-cli:v0.39.0-0.rc.0.102.g3f384b68
+            command: ["cp"]
+            args:
+              - /usr/local/bin/up
+              - /plugin/up
+            volumeMounts:
+              - name: up-plugin
+                mountPath: /plugin
+---
+# Deploy the Argo Application to sync claims to the fabric control plane
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fabric-configuration
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/cwilhit/idp-on-upbound.git
+    targetRevision: HEAD
+    path: configuration/fabric
+    directory:
+      recurse: true
+  destination:
+    name: fabric
+    namespace: default
+---
+# The ProviderConfig for provider-kubernetes to target in-controlplane. See https://docs.upbound.io/connect/gitops/#configure-auth-for-provider-kubernetes
+apiVersion: kubernetes.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: ctp-config
+      key: kubeconfig
+  identity:
+    type: UpboundTokens
+    source: Secret
+    secretRef:
+      name: upbound-credentials
+      namespace: crossplane-system
+      key: token
+---
+# The ProviderConfig for provider-kubernetes to target the Space. See https://docs.upbound.io/connect/gitops/#configure-auth-for-provider-kubernetes
+apiVersion: kubernetes.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: space
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: cluster-config
+      key: kubeconfig
+  identity:
+    type: UpboundTokens
+    source: Secret
+    secretRef:
+      name: upbound-credentials
+      namespace: crossplane-system
+      key: token
