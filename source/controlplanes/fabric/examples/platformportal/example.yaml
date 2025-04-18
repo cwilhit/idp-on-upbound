@@ -25,5 +25,5 @@ spec:
           className: contour
           host: backstage.127.0.0.1.nip.io
         image:
-          repository: ghcr.io/cwilhit/idp-full-backstage
-          tag: 0.0.1
+          repository: ghcr.io/cwilhit/platformportal
+          tag: v0.0.1-backstage

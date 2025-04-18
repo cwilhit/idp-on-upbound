@@ -155,10 +155,10 @@ backstageDeployment = kubernetesv1alpha2.Object {
                         value: "http://${parameters.portalConfig.backstage.ingress.host}"
                     }, {
                         name: "DB_HOST"
-                        value: "${oxr.metadata.name}-db-db-rw"
+                        value: "${oxr.metadata.name}-db-rw"
                     }]
                     envFrom = [{
-                        secretRef.name: "${oxr.metadata.name}-db-db-superuser"
+                        secretRef.name: "${oxr.metadata.name}-db-superuser"
                     }]
                     command = ["node", "packages/backend", "--config", "app-config.yaml"]
                 }]
