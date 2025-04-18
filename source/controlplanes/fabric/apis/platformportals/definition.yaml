@@ -1,0 +1,88 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: platformportals.bootstrap.idp.upbound.io
+spec:
+  group: bootstrap.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: PlatformPortal
+    plural: platformportals
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: PlatformPortal is the Schema for the PlatformPortal API.
+        properties:
+          spec:
+            description: PlatformPortalSpec defines the desired state of PlatformPortal.
+            properties:
+              parameters:
+                properties:
+                  cluster:
+                    properties:
+                      clusterSecretRef:
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                      identity:
+                        properties:
+                          secretRef:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            type: object
+                          type:
+                            type: string
+                        type: object
+                    type: object
+                  portalConfig:
+                    properties:
+                      backstage:
+                        properties:
+                          db:
+                            properties:
+                              incluster:
+                                properties:
+                                  enabled:
+                                    type: boolean
+                                type: object
+                              instances:
+                                type: number
+                            type: object
+                          image:
+                            properties:
+                              repository:
+                                type: string
+                              tag:
+                                type: string
+                            type: object
+                          ingress:
+                            properties:
+                              className:
+                                type: string
+                              host:
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                type: object
+            type: object
+          status:
+            description: PlatformPortalStatus defines the observed state of PlatformPortal.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

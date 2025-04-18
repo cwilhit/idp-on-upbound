@@ -121,3 +121,23 @@ spec:
       name: upbound-credentials
       namespace: crossplane-system
       key: token
+# In order to deploy Backstage, a secret containing a kubeconfig must be provided, pointing at an app cluster in GKE.
+# It also needs a secret containing GCP credentials to assume identity for that app cluster
+# In the future, this can be replaced by a composition to auto-deploy the requisite app cluster.
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: cluster-config
+#   namespace: crossplane-system
+# type: Opaque
+# stringData:
+#   kubeconfig: "kubeconfig"
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: gcp-credentials
+#   namespace: crossplane-system
+# type: Opaque
+# stringData:
+#   credentials: "credentials.json"

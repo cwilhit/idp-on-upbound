@@ -60,9 +60,7 @@ conditions = {
 
 # We need to resolve the serviceProvideRef to confirm they've onboarded to the platform. 
 # This is skipped for now and we its valud
-controlplane = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+controlplane = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp")
     metadata.name = oxr.metadata.name + "-ctp"
     spec.forProvider.manifest = {
@@ -86,9 +84,7 @@ if er?.space:
     _clusterSecretName = er?.space[0]?.Resource?.spec?.credentials?.secretRef?.name
     _clusterSecretNamespace = er?.space[0]?.Resource?.spec?.credentials?.secretRef?.namespace
 
-clusterConfig = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+clusterConfig = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.name + "-ctp-conn1")
     metadata.name = oxr.metadata.name + "-observed-secret1"
     spec.managementPolicies: ["Observe"]
@@ -113,9 +109,7 @@ if er?.space:
     _credentialNamespace = er?.space[0]?.Resource?.spec?.identity?.secretRef?.namespace
 
 _kubeconfig = {}
-upboundCredentials = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+upboundCredentials = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.name + "-ctp-conn2")
     metadata.name = oxr.metadata.name + "-observed-secret2"
     spec.managementPolicies: ["Observe"]
@@ -145,9 +139,7 @@ if _kubeconfig?.clusters:
     _caData = _kubeconfig?.clusters[0]?.cluster?['certificate-authority-data']
 
 # This is the creation of the secret for the control plane in this composition, for Argo.
-connectionSecret = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+connectionSecret = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp-context")
     metadata.name = oxr.metadata.name + "-ctp-context"
     spec.forProvider.manifest = {
@@ -186,9 +178,7 @@ connectionSecret = {
 
 # This is the associated Argo app, pointed at the control plane created above throguh the 
 # secret generated above.
-argoApp = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+argoApp = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-argoapp")
     metadata.name = oxr.metadata.name + "-argoapp"
     spec.forProvider.manifest = {

@@ -1,0 +1,29 @@
+apiVersion: bootstrap.idp.upbound.io/v1alpha1
+kind: PlatformPortal
+metadata:
+  name: example
+spec:
+  parameters:
+    cluster:
+      clusterSecretRef:
+        name: app-cluster-config
+        namespace: crossplane-system
+        key: kubeconfig
+      identity:
+        type: GoogleApplicationCredentials
+        secretRef:
+          name: gcp-secret
+          namespace: crossplane-system
+          key: creds
+    portalConfig:
+      backstage:
+        db:
+          incluster:
+            enabled: true
+          instances: 1
+        ingress:
+          className: contour
+          host: backstage.127.0.0.1.nip.io
+        image:
+          repository: ghcr.io/cwilhit/idp-full-backstage
+          tag: 0.0.1

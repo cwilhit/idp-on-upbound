@@ -52,9 +52,7 @@ conditions = {
 }
 
 # Make a new control plane group when onboarding a new service provider
-serviceProviderGroup = {
-    apiVersion: "kubernetes.crossplane.io/v1alpha2"
-    kind: "Object"
+serviceProviderGroup = kubernetesv1alpha2.Object {
     metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-group")
     spec.forProvider.manifest = {
         apiVersion: "v1"
