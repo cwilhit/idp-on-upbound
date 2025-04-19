@@ -27,3 +27,16 @@ spec:
         image:
           repository: ghcr.io/cwilhit/platformportal
           tag: v0.0.1-backstage
+    portalControlPlane:
+      serverSecretRef:
+        name: platform-ctp-portal-ctp-context
+        namespace: argocd
+        key: server
+      caDataSecretRef:
+        name: platform-ctp-portal-ctp-context
+        namespace: argocd
+        key: caData
+      serviceAccountRef:
+        name: platform-ctp-portal-ctp-context
+        namespace: argocd
+        key: token

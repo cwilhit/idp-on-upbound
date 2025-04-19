@@ -4,6 +4,7 @@ import models.io.crossplane.kubernetes.v1alpha2 as kubernetesv1alpha2
 import models.io.upbound.dev.meta.v1alpha1 as metav1alpha1
 import models.io.upbound.idp.bootstrap.v1alpha1 as bootstrapv1alpha1
 import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
+import base64
 
 oxr = option("params").oxr # observed composite resource
 _ocds = option("params").ocds # observed composed resources
@@ -92,6 +93,60 @@ identitySecretRef = kubernetesv1alpha2.Object {
     spec.providerConfigRef.name: "default"
 }
 
+portalCtpServerSecretRef = kubernetesv1alpha2.Object {
+    metadata = _metadata("${oxr.metadata.name}-sref1")
+    metadata.name = "${oxr.metadata.name}-sref1"
+    spec.managementPolicies: ["Observe"]
+    spec.forProvider.manifest = {
+        apiVersion: "v1"
+        kind: "Secret"
+        metadata = {
+            name: parameters.portalControlPlane.serverSecretRef.name
+            namespace: parameters.portalControlPlane.serverSecretRef.namespace
+            annotations = {
+                "crossplane.io/external-name": parameters.portalControlPlane.serverSecretRef.name
+            }
+        }
+    }
+    spec.providerConfigRef.name: "default"
+}
+
+portalCtpCaSecretRef = kubernetesv1alpha2.Object {
+    metadata = _metadata("${oxr.metadata.name}-sref2")
+    metadata.name = "${oxr.metadata.name}-sref2"
+    spec.managementPolicies: ["Observe"]
+    spec.forProvider.manifest = {
+        apiVersion: "v1"
+        kind: "Secret"
+        metadata = {
+            name: parameters.portalControlPlane.caDataSecretRef.name
+            namespace: parameters.portalControlPlane.caDataSecretRef.namespace
+            annotations = {
+                "crossplane.io/external-name": parameters.portalControlPlane.caDataSecretRef.name
+            }
+        }
+    }
+    spec.providerConfigRef.name: "default"
+}
+
+portalCtpSaSecretRef = kubernetesv1alpha2.Object {
+    metadata = _metadata("${oxr.metadata.name}-sref3")
+    metadata.name = "${oxr.metadata.name}-sref3"
+    spec.managementPolicies: ["Observe"]
+    spec.forProvider.manifest = {
+        apiVersion: "v1"
+        kind: "Secret"
+        metadata = {
+            name: parameters.portalControlPlane.serviceAccountRef.name
+            namespace: parameters.portalControlPlane.serviceAccountRef.namespace
+            annotations = {
+                "crossplane.io/external-name": parameters.portalControlPlane.serviceAccountRef.name
+            }
+        }
+    }
+    spec.providerConfigRef.name: "default"
+}
+
 providerConfig = kubernetesv1alpha1.ProviderConfig {
     metadata = _metadata("${oxr.metadata.name}-providerconfig")
     metadata.name = "${oxr.metadata.name}-providerconfig"
@@ -118,6 +173,16 @@ backstageNamespace = kubernetesv1alpha2.Object {
     }
     spec.providerConfigRef.name: "${oxr.metadata.name}-providerconfig"
 }
+
+_server = None
+if _ocds["${oxr.metadata.name}-sref1"]?.Resource?.status?.atProvider?.manifest?.data:
+    _server = base64.decode(_ocds["${oxr.metadata.name}-sref1"]?.Resource?.status?.atProvider?.manifest?.data["${parameters.portalControlPlane.serverSecretRef.key}"])
+_caData = None
+if _ocds["${oxr.metadata.name}-sref2"]?.Resource?.status?.atProvider?.manifest?.data:
+    _caData = base64.decode(_ocds["${oxr.metadata.name}-sref2"]?.Resource?.status?.atProvider?.manifest?.data["${parameters.portalControlPlane.caDataSecretRef.key}"])
+_saToken = None
+if _ocds["${oxr.metadata.name}-sref3"]?.Resource?.status?.atProvider?.manifest?.data:
+    _saToken = base64.decode(_ocds["${oxr.metadata.name}-sref3"]?.Resource?.status?.atProvider?.manifest?.data["${parameters.portalControlPlane.serviceAccountRef.key}"])
 
 backstageDeployment = kubernetesv1alpha2.Object {
     metadata = _metadata("${oxr.metadata.name}-backstage")
@@ -156,6 +221,18 @@ backstageDeployment = kubernetesv1alpha2.Object {
                     }, {
                         name: "DB_HOST"
                         value: "${oxr.metadata.name}-db-rw"
+                    }, {
+                        name: "PORTAL_CONTROL_PLANE_URL"
+                        value: _server
+                    }, {
+                        name: "PORTAL_CONTROL_PLANE_NAME"
+                        value: "portal"
+                    }, {
+                        name: "PORTAL_CONTROL_PLANE_SA"
+                        value: _saToken
+                    }, {
+                        name: "PORTAL_CONTROL_PLANE_CA_DATA"
+                        value: _caData
                     }]
                     envFrom = [{
                         secretRef.name: "${oxr.metadata.name}-db-superuser"
@@ -246,12 +323,15 @@ if parameters.portalConfig.backstage.db.incluster.enabled:
 _items = [
     clusterSecretRef,
     identitySecretRef,
+    portalCtpServerSecretRef,
+    portalCtpCaSecretRef,
+    portalCtpSaSecretRef,
     providerConfig,
     backstageNamespace,
     backstageDeployment,
     backstageIngress,
     backstageService,
-    _backstageDatabase
+    _backstageDatabase,
     conditions
 ]
 items = _items

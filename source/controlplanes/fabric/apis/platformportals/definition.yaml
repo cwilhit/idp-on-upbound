@@ -77,6 +77,36 @@ spec:
                             type: object
                         type: object
                     type: object
+                  portalControlPlane:
+                    properties:
+                      caDataSecretRef:
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                      serverSecretRef:
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                      serviceAccountRef:
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                    type: object
                 type: object
             type: object
           status:

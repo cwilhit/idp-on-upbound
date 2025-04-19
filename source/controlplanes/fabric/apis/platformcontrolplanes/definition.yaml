@@ -1,0 +1,30 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: platformcontrolplanes.bootstrap.idp.upbound.io
+spec:
+  group: bootstrap.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: PlatformControlPlane
+    plural: platformcontrolplanes
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: PlatformControlPlane is the Schema for the PlatformControlPlane
+          API.
+        properties:
+          spec:
+            description: PlatformControlPlaneSpec defines the desired state of PlatformControlPlane.
+            type: object
+          status:
+            description: PlatformControlPlaneStatus defines the observed state of
+              PlatformControlPlane.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
