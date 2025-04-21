@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: platformcontrolplanes.bootstrap.idp.upbound.io
+spec:
+  compositeTypeRef:
+    apiVersion: bootstrap.idp.upbound.io/v1alpha1
+    kind: PlatformControlPlane
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: upbound-fabriccompose-platformctp
+    step: compose-platformctp
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

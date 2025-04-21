@@ -1,0 +1,31 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xserviceproviders.bootstrap.idp.upbound.io
+spec:
+  claimNames:
+    kind: ServiceProvider
+    plural: serviceproviders
+  group: bootstrap.idp.upbound.io
+  names:
+    categories:
+    - crossplane
+    kind: XServiceProvider
+    plural: xserviceproviders
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        description: ServiceProvider is the Schema for the ServiceProvider API.
+        properties:
+          spec:
+            description: ServiceProviderSpec defines the desired state of ServiceProvider.
+            type: object
+          status:
+            description: ServiceProviderStatus defines the observed state of ServiceProvider.
+            type: object
+        required:
+        - spec
+        type: object
+    served: true

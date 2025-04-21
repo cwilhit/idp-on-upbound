@@ -1,0 +1,27 @@
+apiVersion: scheduling.upbound.io/v1alpha1
+kind: Environment
+metadata:
+  name: default
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  resourceGroups:
+    - name: db.idp.upbound.io
+      dimensions:
+        offering: db
+    - name: networking.idp.upbound.io
+      dimensions:
+        offering: networking
+    - name: compute.idp.upbound.io
+      dimensions:
+        offering: compute
+    - name: storage.idp.upbound.io
+      dimensions:
+        offering: storage
+    - name: ai.idp.upbound.io
+      dimensions:
+        offering: ai
+    - name: iam.idp.upbound.io
+      dimensions:
+        offering: iam
