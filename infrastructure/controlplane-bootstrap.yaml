@@ -1,9 +1,0 @@
-apiVersion: spaces.upbound.io/v1beta1
-kind: ControlPlane
-metadata:
-  name: bootstrap
-  namespace: default
-spec:
-  crossplane:
-    autoUpgrade:
-      channel: Rapid
