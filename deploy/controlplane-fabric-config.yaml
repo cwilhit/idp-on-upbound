@@ -64,7 +64,22 @@ spec:
               - name: up-plugin
                 mountPath: /plugin
 ---
-
+# Deploy the Argo Application to sync claims to the fabric control plane
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fabric-configuration
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/cwilhit/idp-on-upbound.git
+    targetRevision: HEAD
+    path: configuration/fabric
+    directory:
+      recurse: true
+  destination:
+    name: in-cluster
 ---
 # The ProviderConfig for provider-kubernetes to target in-controlplane. See https://docs.upbound.io/connect/gitops/#configure-auth-for-provider-kubernetes
 apiVersion: kubernetes.crossplane.io/v1alpha1

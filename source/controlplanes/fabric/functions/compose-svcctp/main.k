@@ -140,13 +140,13 @@ if _kubeconfig?.clusters:
 
 # This is the creation of the secret for the control plane in this composition, for Argo.
 connectionSecret = kubernetesv1alpha2.Object {
-    metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp-context")
+    metadata = _metadata("${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}-ctp-context")
     metadata.name = oxr.metadata.name + "-ctp-context"
     spec.forProvider.manifest = {
         apiVersion: "v1"
         kind: "Secret"
         metadata = {
-            name: oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp-context"
+            name: "${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}-ctp-context"
             namespace: "argocd"
             labels = {
                 "argocd.argoproj.io/secret-type": "cluster"
@@ -154,7 +154,7 @@ connectionSecret = kubernetesv1alpha2.Object {
         }
         type: "Opaque"
         stringData = {
-            name: oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp-context"
+            name: "${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}-ctp-context"
             server: "${_server}/apis/spaces.upbound.io/v1beta1/namespaces/${_ctpGroup}/controlplanes/${_ctpName}/k8s"
             config = """{
     "execProviderConfig": {
@@ -179,13 +179,13 @@ connectionSecret = kubernetesv1alpha2.Object {
 # This is the associated Argo app, pointed at the control plane created above throguh the 
 # secret generated above.
 argoApp = kubernetesv1alpha2.Object {
-    metadata = _metadata(oxr.metadata.labels['crossplane.io/claim-name'] + "-argoapp")
+    metadata = _metadata("${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}-argoapp")
     metadata.name = oxr.metadata.name + "-argoapp"
     spec.forProvider.manifest = {
         apiVersion: "argoproj.io/v1alpha1"
         kind: "Application"
         metadata = {
-            name: oxr.metadata.labels['crossplane.io/claim-name']
+            name: "ctp-${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}"
             namespace: "argocd"
         }
         spec = {
@@ -193,11 +193,11 @@ argoApp = kubernetesv1alpha2.Object {
             source = {
                 repoURL: "https://github.com/cwilhit/idp-on-upbound.git"
                 targetRevision: "HEAD"
-                path: "configuration/" + oxr.metadata.labels['crossplane.io/claim-name']
+                path: "configuration/${oxr.metadata.labels['crossplane.io/claim-namespace']}/${oxr.metadata.labels['crossplane.io/claim-name']}"
                 directory.recurse: True
             }
             destination = {
-                name: oxr.metadata.labels['crossplane.io/claim-name'] + "-ctp-context"
+                name: "${oxr.metadata.labels['crossplane.io/claim-namespace']}-${oxr.metadata.labels['crossplane.io/claim-name']}-ctp-context"
                 namespace: "argocd"
             }
         }
