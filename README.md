@@ -11,23 +11,23 @@ This repository contains a reference platform for an Internal Developer Platform
 
 This platform defines a set of APIs for a variety of cloud resources app developers might use as part of their day-to-day work. For ease of navigability, this reference architecture is defined as a monorepo, composed of several [control plane projects](https://docs.upbound.io/learn/core-concepts/projects/):
 
-* [compute](compute/) is a control plane project that defines the following APIs:
-  * [Application](compute/apis/applications/definition.yaml) lets a developer deploy a basic containerized app onto a Kubernetes cluster.
-  * [Cluster](compute/apis/clusters/definition.yaml) lets a developer spin up a new Kubernetes Cluster with its own service account inside a Network.
-  * [Function](compute/apis/functions/definition.yaml) lets a developer deploy a serverless function. 
-  * [VirtualMachine](compute/apis/virtualmachines/definition.yaml) lets a developer deploy a Virtual Machine.
-* [networking](networking/) is a control plane project that defines the following APIs:
-  * [Network](networking/apis/networks/definition.yaml) lets a developer deploy a new VPC.
-  * [Subnet](networking/apis/subnets/definition.yaml) lets a developer deploy a subnet in a VPC.
-* [iam](iam/) is a control plane project that defines the following APIs:
-  * [Account](iam/apis/accounts/definition.yaml) lets a developer deploy a new Cloud account.
-  * [ServiceAccount](iam/apis/serviceaccounts/definition.yaml) lets a developer deploy a Service Account.
-* [db](db/) is a control plane project that defines the following APIs:
-  * [SQLInstance](db/apis/sqlinstances/definition.yaml) lets a developer deploy a SQL Instance into a VPC subnet.
-* [storage](storage/) is a control plane project that defines the following APIs:
-  * [bucket](storage/apis/buckets/definition.yaml) lets a developer deploy a basic bucket.
-* [ai](ai/) is a control plane project that defines the following APIs:
-  * [Model](ai/apis/models/definition.yaml) lets a developer deploy an AI Model to a Kubernetes cluster.
+* [compute](source/controlplanes/compute/) is a control plane project that defines the following APIs:
+  * [Application](source/controlplanes/compute/apis/applications/definition.yaml) lets a developer deploy a basic containerized app onto a Kubernetes cluster.
+  * [Cluster](source/controlplanes/compute/apis/clusters/definition.yaml) lets a developer spin up a new Kubernetes Cluster with its own service account inside a Network.
+  * [Function](source/controlplanes/compute/apis/functions/definition.yaml) lets a developer deploy a serverless function. 
+  * [VirtualMachine](source/controlplanes/compute/apis/virtualmachines/definition.yaml) lets a developer deploy a Virtual Machine.
+* [networking](source/controlplanes/networking/) is a control plane project that defines the following APIs:
+  * [Network](source/controlplanes/networking/apis/networks/definition.yaml) lets a developer deploy a new VPC.
+  * [Subnet](source/controlplanes/networking/apis/subnets/definition.yaml) lets a developer deploy a subnet in a VPC.
+* [iam](source/controlplanes/iam/) is a control plane project that defines the following APIs:
+  * [Account](source/controlplanes/iam/apis/accounts/definition.yaml) lets a developer deploy a new Cloud account.
+  * [ServiceAccount](source/controlplanes/iam/apis/serviceaccounts/definition.yaml) lets a developer deploy a Service Account.
+* [db](source/controlplanes/db/) is a control plane project that defines the following APIs:
+  * [SQLInstance](source/controlplanes/db/apis/sqlinstances/definition.yaml) lets a developer deploy a SQL Instance into a VPC subnet.
+* [storage](source/controlplanes/storage/) is a control plane project that defines the following APIs:
+  * [bucket](source/controlplanes/storage/apis/buckets/definition.yaml) lets a developer deploy a basic bucket.
+* [ai](source/controlplanes/ai/) is a control plane project that defines the following APIs:
+  * [Model](source/controlplanes/ai/apis/models/definition.yaml) lets a developer deploy an AI Model to a Kubernetes cluster.
 
 The composite types outlined above are meant to illustrate how to use the [control plane topology](https://docs.upbound.io/deploy/control-plane-topologies/) features. These composites don't compose real cloud resources, instead they use:
 
@@ -53,18 +53,18 @@ graph TD
 
 * **platform control planes:** There's only one platform control plane deployed in this reference architecture. You can find it's definition in the [platform](platform/) folder. All API requests made by consumers flows through this control plane to lower-level control planes.
 * **service-level control planes:** Individual platform teams own service-level control planes. They define a part of the total APIs offered on the platform. The platform control plane routes all requests to service-level control planes. They're called _service-level_ control planes because they're responsible for providing composite API types that deliver a managed service experiences in the form of `${resource}-as-a-service`. This reference architecture deploys a control plane on a domain boundary:
-  * [compute](compute/examples/ctp.yaml)
-  * [networking](networking/examples/ctp.yaml)
-  * [iam](iam/examples/ctp.yaml)
-  * [db](db/examples/ctp.yaml)
-  * [storage](storage/examples/ctp.yaml)
-  * [ai](ai/examples/ctp.yaml)
+  * [compute](source/controlplanes/compute/examples/ctp.yaml)
+  * [networking](source/controlplanes/networking/examples/ctp.yaml)
+  * [iam](source/controlplanes/iam/examples/ctp.yaml)
+  * [db](source/controlplanes/db/examples/ctp.yaml)
+  * [storage](source/controlplanes/storage/examples/ctp.yaml)
+  * [ai](source/controlplanes/ai/examples/ctp.yaml)
 
 Each link above is to the definition of the control plane resource deployed with the corresponding project it's defined next to. 
 
-The single **platform control plane** is defined [here](platform/examples/ctp.yaml). It doesn't define any of its own APIs. Instead, each API set defined by each service-level control plane gets deployed to the platform control plane as [RemoteConfigurations](https://docs.upbound.io/deploy/control-plane-topologies/#install-a-_remoteconfiguration_). This list of API dependencies is defined [here](platform/examples/remote-configs.yaml).
+The single **platform control plane** is defined [here](source/controlplanes/platform/examples/ctp.yaml). It doesn't define any of its own APIs. Instead, each API set defined by each service-level control plane gets deployed to the platform control plane as [RemoteConfigurations](https://docs.upbound.io/deploy/control-plane-topologies/#install-a-_remoteconfiguration_). This list of API dependencies is defined [here](source/controlplanes/platform/examples/remote-configs.yaml).
 
-Once all control planes get deployed, create an [Environment](https://docs.upbound.io/deploy/control-plane-topologies/#use-an-_environment_-to-route-resources) to configure how resources get routed to service-level control planes. This reference architecture employs a [basic routing scheme](platform/examples/environment.yaml) to map API groups to their corresponding service-level control planes 1:1.
+Once all control planes get deployed, create an [Environment](https://docs.upbound.io/deploy/control-plane-topologies/#use-an-_environment_-to-route-resources) to configure how resources get routed to service-level control planes. This reference architecture employs a [basic routing scheme](source/controlplanes/platform/examples/environment.yaml) to map API groups to their corresponding service-level control planes 1:1.
 
 ## Quickstart
 
@@ -99,12 +99,12 @@ up ctx upbound/upbound-gcp-us-central-1-preview/default
 Deploy each service-level control plane. A sample resource configuration is linked in the previous section:
 
 ```console
-kubectl apply -f compute/examples/ctp.yaml \
-  -f storage/examples/ctp.yaml \
-  -f networking/examples/ctp.yaml \
-  -f iam/examples/ctp.yaml \
-  -f db/examples/ctp.yaml \
-  -f ai/examples/ctp.yaml
+kubectl apply -f source/controlplanes/compute/examples/ctp.yaml \
+  -f source/controlplanes/storage/examples/ctp.yaml \
+  -f source/controlplanes/networking/examples/ctp.yaml \
+  -f source/controlplanes/iam/examples/ctp.yaml \
+  -f source/controlplanes/db/examples/ctp.yaml \
+  -f source/controlplanes/ai/examples/ctp.yaml
 ```
 
 Once each control plane becomes healthy, connect to it and install the corresponding configuration built from its control plane project:
@@ -133,14 +133,14 @@ Deploy the platform control plane:
 
 ```console
 up ctx ..
-kubectl apply -f platform/examples/ctp.yaml
+kubectl apply -f source/controlplanes/platform/examples/ctp.yaml
 ```
 
 Configure the platform control plane with Remote Configurations and routing:
 
 ```
 up ctx ./portal
-kubectl apply -f platform/examples/remote-configs.yaml \
+kubectl apply -f source/controlplanes/platform/examples/remote-configs.yaml \
   -f environment.yaml
 ```
 
@@ -154,13 +154,13 @@ This reference architecture demonstrates some ways you can use _Topology_ featur
 
 ### Generic composite API
 
-Starting with the basics, the first composite API type demonstrated on this platform is a self-contained API like [_VirtualMachine_](compute/apis/virtualmachines/definition.yaml). This API doesn't depend on other composite types defined and reconciled by other service control planes. It's solely responsible for composing a set of resources that are self-contained within the control plane. This method is the canonical method taught in OSS Crossplane for defining a new composite type.
+Starting with the basics, the first composite API type demonstrated on this platform is a self-contained API like [_VirtualMachine_](source/controlplanes/compute/apis/virtualmachines/definition.yaml). This API doesn't depend on other composite types defined and reconciled by other service control planes. It's solely responsible for composing a set of resources that are self-contained within the control plane. This method is the canonical method taught in OSS Crossplane for defining a new composite type.
 
 ### Reference another composite API
 
-The [_Application_](compute/apis/applications/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API. The _Application_ resource is a simplified representation of a containerized deployment to a Kubernetes cluster. In its API schema, you can see it requires a reference to a Kubernetes cluster at `.spec.parameters.application.clusterRef`.
+The [_Application_](source/controlplanes/compute/apis/applications/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API. The _Application_ resource is a simplified representation of a containerized deployment to a Kubernetes cluster. In its API schema, you can see it requires a reference to a Kubernetes cluster at `.spec.parameters.application.clusterRef`.
 
-In the _ApplicationClaim_ [example](compute/examples/application/example.yaml), the manifest demonstrates providing a reference to a _ClusterClaim_ resource with the name "example":
+In the _ApplicationClaim_ [example](source/controlplanes/compute/examples/application/example.yaml), the manifest demonstrates providing a reference to a _ClusterClaim_ resource with the name "example":
 
 ```yaml
 apiVersion: compute.idp.upbound.io/v1alpha1
@@ -218,9 +218,9 @@ The `cluster-ref` that gets created is a _ReferencedObject_, bringing it into th
 
 ### Reference and create another composite API
 
-The [_Cluster_](compute/apis/clusters/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API **and create it, if it doesn't exist**. The _Cluster_ resource is a simplified representation of a Kubernetes cluster. In its API schema, you can see it requires a reference to a service account at `.spec.parameters.serviceAccountRef`.
+The [_Cluster_](source/controlplanes/compute/apis/clusters/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to resolve a reference to another composite API **and create it, if it doesn't exist**. The _Cluster_ resource is a simplified representation of a Kubernetes cluster. In its API schema, you can see it requires a reference to a service account at `.spec.parameters.serviceAccountRef`.
 
-In the _ClusterClaim_ [example](compute/examples/cluster/example.yaml), the manifest demonstrates providing a reference to a _ServiceAccountClaim_ resource with the name "cluster-sa":
+In the _ClusterClaim_ [example](source/controlplanes/compute/examples/cluster/example.yaml), the manifest demonstrates providing a reference to a _ServiceAccountClaim_ resource with the name "cluster-sa":
 
 ```yaml
 apiVersion: compute.idp.upbound.io/v1alpha1
@@ -278,7 +278,7 @@ There's two things that happen in the _ReferencedObject_ that gets composed abov
 
 ### Reference and create another resource
 
-A variation of the above, the [_SQLInstance_](db/apis/sqlinstances/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to create a new Kubernetes secret alongside the _SQLInstance_, in the same control plane where the resources representing the database get composed. You can see how this works in the composition:
+A variation of the above, the [_SQLInstance_](source/controlplanes/db/apis/sqlinstances/definition.yaml) composite type demonstrates how to use _ReferencedObjects_ to create a new Kubernetes secret alongside the _SQLInstance_, in the same control plane where the resources representing the database get composed. You can see how this works in the composition:
 
 ```python
 _secret = upboundv1alpha1.ReferencedObject {
@@ -312,7 +312,7 @@ As in the earlier section, this composition step includes a similar `forProvider
 
 ## Routing setup
 
-We explained earlier how the platform control plane is the front door to the platform. All composite API requests are submitted to the platform control plane first, then get routed down to the appropriate service control plane. The routing configuration is defined in an _Environment_ resource type. This reference architecture uses a basic [configuration](platform/examples/environment.yaml):
+We explained earlier how the platform control plane is the front door to the platform. All composite API requests are submitted to the platform control plane first, then get routed down to the appropriate service control plane. The routing configuration is defined in an _Environment_ resource type. This reference architecture uses a basic [configuration](source/controlplanes/platform/examples/environment.yaml):
 
 ```yaml
 apiVersion: scheduling.upbound.io/v1alpha1
