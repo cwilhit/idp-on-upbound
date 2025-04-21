@@ -61,13 +61,13 @@ conditions = {
 # We need to resolve the serviceProvideRef to confirm they've onboarded to the platform. 
 # This is skipped for now and we its valud
 controlplane = kubernetesv1alpha2.Object {
-    metadata = _metadata("${oxr.metadata.name}-ctp")
-    metadata.name = "${oxr.metadata.name}-ctp"
+    metadata = _metadata(oxr.metadata.name)
+    metadata.name = "${oxr.metadata.name}"
     spec.forProvider.manifest = {
         apiVersion: "spaces.upbound.io/v1beta1"
         kind: "ControlPlane"
         metadata = {
-            name: "${oxr.metadata.name}-ctp"
+            name: oxr.metadata.name
             namespace: "default"
         }
         spec.crossplane.autoUpgrade.channel: "Rapid"
