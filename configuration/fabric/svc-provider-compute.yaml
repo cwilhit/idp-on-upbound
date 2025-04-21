@@ -1,0 +1,17 @@
+apiVersion: bootstrap.idp.upbound.io/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: compute
+  namespace: default
+spec: {}
+---
+apiVersion: bootstrap.idp.upbound.io/v1alpha1
+kind: ServiceControlPlane
+metadata:
+  name: production
+  namespace: default
+spec:
+  parameters:
+    serviceProviderRef:
+      name: compute
+      namespace: compute
