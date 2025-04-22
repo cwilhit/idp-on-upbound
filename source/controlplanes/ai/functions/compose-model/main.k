@@ -15,6 +15,7 @@ _metadata = lambda name: str -> any {
         name = "${oxr.metadata.name}-${name}"
     }
 }
+
 parameters = aiv1alpha1.AiIdpUpboundIoV1alpha1ModelSpecParameters { **oxr.spec.parameters }
 _items = [nopv1alpha1.NopResource {
     metadata: _metadata('ai-model')

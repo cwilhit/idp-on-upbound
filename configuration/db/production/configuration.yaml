@@ -5,4 +5,4 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  package: xpkg.upbound.io/upbound/idp-db:v0.0.0-1741452849
+  package: xpkg.upbound.io/upbound/idp-db:v0.0.0-1745331697

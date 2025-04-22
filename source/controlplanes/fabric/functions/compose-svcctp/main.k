@@ -69,6 +69,9 @@ controlplane = kubernetesv1alpha2.Object {
         metadata = {
             name: oxr.metadata.labels['crossplane.io/claim-name']
             namespace: oxr.spec.parameters.serviceProviderRef.name
+            labels = {
+                "dimension.scheduling.upbound.io/offering": oxr.spec.parameters.serviceProviderRef.name
+            }
         }
         spec.crossplane.autoUpgrade.channel: "Rapid"
     }
